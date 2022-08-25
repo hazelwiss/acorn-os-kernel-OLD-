@@ -26,6 +26,14 @@ impl State {
         hal::console::puts(s);
     }
 
+    fn clear(&self) {
+        hal::console::clear();
+    }
+
+    fn new_line(&self) {
+        hal::console::new_line();
+    }
+
     fn get_dimensions(&self) -> Dimensions {
         Dimensions {
             width: hal::console::get_w(),
@@ -66,8 +74,16 @@ pub fn set_pos(pos: Pos) {
     CONSOLE.lock().pos = pos;
 }
 
+pub fn newline() {
+    CONSOLE.lock().new_line();
+}
+
 pub fn get_pos() -> Pos {
     CONSOLE.lock().pos
+}
+
+pub fn clear() {
+    CONSOLE.lock().clear();
 }
 
 pub fn get_dimensions() -> Dimensions {

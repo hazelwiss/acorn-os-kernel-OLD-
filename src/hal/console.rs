@@ -7,6 +7,7 @@ pub struct IDesc {
     pub puts: fn(&str),
     pub get_w: fn() -> usize,
     pub get_h: fn() -> usize,
+    pub new_line: fn(),
     pub clear: fn(),
 }
 
@@ -26,6 +27,10 @@ pub fn get_w() -> usize {
 
 pub fn get_h() -> usize {
     (ICONSOLE.lock().get_h)()
+}
+
+pub fn new_line() {
+    (ICONSOLE.lock().new_line)();
 }
 
 pub fn clear() {

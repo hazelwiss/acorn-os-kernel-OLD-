@@ -1,27 +1,36 @@
-use crate::drivers;
+use core::mem;
+
+use crate::drivers::console;
 use alloc::{string::String, vec::Vec};
 use spin::Mutex;
 
 struct Shell {
     log_lines: Vec<String>,
     cur_line: String,
+    input_str: String,
 }
 
 impl Shell {
     fn putc(&mut self, c: char) {
-        match c {
-            '\n' => self.new_line(),
-            c => self.cur_line.push(c),
-        }
-        let dimensions = drivers::console::get_dimensions();
-        if self.cur_line.len() >= dimensions.width {
-            self.new_line()
-        }
+        self.putc_no_reapply(c);
+        self.reapply_to_console();
     }
 
     fn puts(&mut self, s: &str) {
         for c in s.chars() {
-            self.putc(c);
+            self.putc_no_reapply(c);
+            self.reapply_to_console();
+        }
+    }
+
+    fn putc_no_reapply(&mut self, c: char) {
+        match c {
+            '\n' => self.new_line(),
+            c => self.cur_line.push(c),
+        }
+        let dimensions = console::get_dimensions();
+        if self.cur_line.len() >= dimensions.width {
+            self.new_line()
         }
     }
 
@@ -30,15 +39,33 @@ impl Shell {
     }
 
     fn new_line(&mut self) {
-        let mut move_str = String::new();
-        core::mem::swap(&mut self.cur_line, &mut move_str);
+        let mut move_str = String::with_capacity(console::get_dimensions().width);
+        mem::swap(&mut self.cur_line, &mut move_str);
         self.log_lines.push(move_str);
+    }
+
+    fn reapply_to_console(&self) {
+        console::clear();
+        let log_max_lines = console::get_dimensions().height - 1;
+        let start_index = if self.log_lines.len() < log_max_lines {
+            0
+        } else {
+            self.log_lines.len() - log_max_lines
+        };
+        let len = self.log_lines.len();
+        let slice = &self.log_lines[start_index..len];
+        for line in slice {
+            console::puts(&line);
+            console::newline();
+        }
+        console::puts(&self.cur_line);
     }
 }
 
 static LOG: Mutex<Shell> = Mutex::new(Shell {
     log_lines: vec![],
     cur_line: String::new(),
+    input_str: String::new(),
 });
 
 pub fn putc(c: char) {
@@ -55,8 +82,8 @@ pub fn getc() -> char {
 
 pub fn run() {
     let mut string = String::new();
+    LOG.lock().reapply_to_console();
     loop {
-        log!("> ");
         loop {}
     }
 }

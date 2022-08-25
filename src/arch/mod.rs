@@ -22,6 +22,7 @@ const fn get_arch_interfaces_x86() -> ArchInterfaces {
             clear: family::x86::fb::clear,
             get_w: family::x86::fb::get_w,
             get_h: family::x86::fb::get_h,
+            new_line: family::x86::fb::new_line,
         },
         ifb: hal::fb::IDesc {
             init: family::x86::fb::init,
