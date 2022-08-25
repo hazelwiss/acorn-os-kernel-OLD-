@@ -6,3 +6,9 @@ edition = "2021"
 [dependencies]
 spin = "0.9.4"
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
+kapi = { path = "kapi" }
+
+[workspace]
+members = [
+    "kapi"
+]

@@ -6,18 +6,15 @@
 
 #[macro_use]
 extern crate alloc;
+extern crate kapi;
 
-mod arch;
-mod drivers;
-mod kapi;
 #[macro_use]
 mod log;
-mod hal;
+mod mem;
 mod panic;
 mod shell;
-#[macro_use]
-mod util;
-mod mem;
+
+use kapi::{arch, drivers, hal, util};
 
 #[no_mangle]
 pub unsafe extern "C" fn kmain() -> ! {

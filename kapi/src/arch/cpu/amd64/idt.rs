@@ -67,9 +67,9 @@ pub fn remove_descriptor(index: u8) {}
 pub fn apply() {
     let idtr = IDT_PTR.lock();
     let idtr_ptr = (&*idtr) as *const IDTR as usize;
-    unsafe {
-        asm!(
-            "lidt {}", 
-            in(reg)(&idtr_ptr));
-    }
+    //unsafe {
+    //    asm!(
+    //        "lidt {}",
+    //        in(reg)(&idtr_ptr));
+    //}
 }

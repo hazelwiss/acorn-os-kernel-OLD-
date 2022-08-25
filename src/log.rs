@@ -1,4 +1,4 @@
-use crate::{drivers, shell, util::once};
+use crate::{drivers, kapi::util::once, shell};
 use core::fmt;
 use spin::Mutex;
 

@@ -1,5 +1,6 @@
 pub mod mem;
 
+#[macro_export]
 macro_rules! once {
     ($($tokens:tt)*) => {
         {
@@ -9,4 +10,4 @@ macro_rules! once {
     };
 }
 
-pub(crate) use once;
+pub use once;
