@@ -27,19 +27,13 @@ impl VGAState {
     }
 
     fn putc(&mut self, c: char) {
-        match c {
-            '\n' => self.new_line(),
-            '\r' => self.pos_x = 0,
-            c => {
-                if self.pos_x >= VGA_WIDTH {
-                    self.pos_x = 0;
-                    self.pos_y = (self.pos_y + 1) % VGA_WIDTH;
-                }
-                let adr = VGA_BASE_ADR + self.pos_x * 2 + self.pos_y * 2 * VGA_WIDTH;
-                unsafe { mem::write(adr, [c as u8, 9]) };
-                self.pos_x += 1;
-            }
+        if self.pos_x >= VGA_WIDTH {
+            self.pos_x = 0;
+            self.pos_y = (self.pos_y + 1) % VGA_WIDTH;
         }
+        let adr = VGA_BASE_ADR + self.pos_x * 2 + self.pos_y * 2 * VGA_WIDTH;
+        unsafe { mem::write(adr, [c as u8, 9]) };
+        self.pos_x += 1;
     }
 
     fn puts(&mut self, s: &str) {

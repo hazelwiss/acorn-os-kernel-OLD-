@@ -1,3 +1,4 @@
+pub mod chipset;
 pub mod cpu;
 pub mod family;
 
@@ -16,20 +17,20 @@ pub const fn get_arch_interfaces() -> ArchInterfaces {
 const fn get_arch_interfaces_x86() -> ArchInterfaces {
     ArchInterfaces {
         iconsole: hal::console::IDesc {
-            init: family::x86::fb::init,
-            putc: family::x86::fb::putc,
-            puts: family::x86::fb::puts,
-            clear: family::x86::fb::clear,
-            get_w: family::x86::fb::get_w,
-            get_h: family::x86::fb::get_h,
-            new_line: family::x86::fb::new_line,
+            init: chipset::x86::fb::init,
+            putc: chipset::x86::fb::putc,
+            puts: chipset::x86::fb::puts,
+            clear: chipset::x86::fb::clear,
+            get_w: chipset::x86::fb::get_w,
+            get_h: chipset::x86::fb::get_h,
+            new_line: chipset::x86::fb::new_line,
         },
         ifb: hal::fb::IDesc {
-            init: family::x86::fb::init,
+            init: chipset::x86::fb::init,
         },
         iserial: hal::serial::IDesc {
-            init: family::x86::com::init,
-            putb: family::x86::com::putb,
+            init: chipset::x86::com::init,
+            putb: chipset::x86::com::putb,
         },
     }
 }

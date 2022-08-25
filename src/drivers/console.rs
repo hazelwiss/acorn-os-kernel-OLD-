@@ -19,7 +19,10 @@ impl Driver for State {
 
 impl State {
     fn putc(&self, c: char) {
-        hal::console::putc(c);
+        match c {
+            '\n' => hal::console::new_line(),
+            c => hal::console::putc(c),
+        };
     }
 
     fn puts(&self, s: &str) {
