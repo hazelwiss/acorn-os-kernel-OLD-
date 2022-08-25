@@ -1,9 +1,18 @@
-pub mod interfaces;
-pub mod x64;
+use crate::util::once;
 
-pub struct Desc {
-    pub entry: fn(),
-    pub iserialin: Option<interfaces::serial::ISerialIn>,
-    pub iserialout: Option<interfaces::serial::ISerialOut>,
-    pub console: Option<interfaces::serial::IConsole>,
+pub mod console;
+pub mod serial_out;
+
+pub trait Driver {
+    fn init(&self);
+    fn name(&self) -> &'static str;
+    fn arches(&self) -> Option<()> {
+        None
+    }
+}
+
+pub fn init() {
+    once!(
+        console::init();
+    );
 }

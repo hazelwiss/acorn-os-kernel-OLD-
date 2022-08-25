@@ -1,15 +1,13 @@
-use crate::kapi::{self, drivers::SHELL};
-use core::{fmt, sync::atomic::Ordering};
+use crate::{drivers, shell, util::once};
+use core::fmt;
 use spin::Mutex;
 
 struct Writer;
 
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
-        match SHELL.console {
-            Some(ref co) => (co.puts)(s),
-            None => panic!("Invalid shell interface!"),
-        }
+        shell::puts(s);
+        drivers::serial_out::puts(s);
         Ok(())
     }
 }
@@ -71,6 +69,7 @@ macro_rules! logerr {
 }
 
 pub fn init() {
-    assert!(kapi::drivers::INITIALIZED.load(Ordering::Relaxed));
-    logok!("Initialized logging!");
+    once!(
+        logok!("Initialized logging!");
+    );
 }

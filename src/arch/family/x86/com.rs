@@ -2,18 +2,15 @@ use spin::mutex::Mutex;
 
 use crate::{
     arch::family::x86::port::{in8, out8},
-    drivers::{
-        self,
-        interfaces::serial::{ISerialIn, ISerialOut},
-    },
+    util::once,
 };
 
-pub const SERIAL: drivers::Desc = drivers::Desc {
-    entry: init,
-    iserialin: Some(ISerialIn { getb: getb }),
-    iserialout: Some(ISerialOut { putb: putb }),
-    console: None,
-};
+pub fn init() {
+    once!(
+    init_port(COMPort::COM1, 115200);
+
+    );
+}
 
 pub fn putb(b: u8) {
     putb_port(COMPort::COM1, b);
@@ -21,10 +18,6 @@ pub fn putb(b: u8) {
 
 pub fn getb() -> u8 {
     getb_port(COMPort::COM1)
-}
-
-pub fn init() {
-    init_port(COMPort::COM1, 115200);
 }
 
 static WRITER_LOCK: [Mutex<usize>; 8] = [

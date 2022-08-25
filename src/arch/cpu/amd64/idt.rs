@@ -2,6 +2,8 @@ use core::arch::asm;
 use lazy_static::lazy_static;
 use spin::Mutex;
 
+use crate::util::once;
+
 #[derive(Clone, Copy)]
 #[repr(C, packed)]
 struct IDTEntry {
@@ -55,7 +57,7 @@ lazy_static! {
 }
 
 pub fn init() {
-    apply()
+    once!(apply());
 }
 
 pub fn add_descriptor(index: u8, interrupt_handler: fn()) {}
