@@ -1,7 +1,9 @@
-use core::mem;
-
 use crate::drivers::console;
-use alloc::{string::String, vec::Vec};
+use alloc::{
+    string::{String, ToString},
+    vec::Vec,
+};
+use core::mem;
 use spin::Mutex;
 
 struct Shell {
@@ -46,7 +48,7 @@ impl Shell {
 
     fn reapply_to_console(&self) {
         console::clear();
-        let log_max_lines = console::get_dimensions().height - 1;
+        let log_max_lines = console::get_dimensions().height - 2;
         let start_index = if self.log_lines.len() < log_max_lines {
             0
         } else {
@@ -59,6 +61,7 @@ impl Shell {
             console::newline();
         }
         console::puts(&self.cur_line);
+        console::puts(&format!("> {}", self.input_str));
     }
 }
 
@@ -81,9 +84,7 @@ pub fn getc() -> char {
 }
 
 pub fn run() {
-    let mut string = String::new();
     LOG.lock().reapply_to_console();
-    loop {
-        loop {}
-    }
+    let mut string = String::new();
+    loop {}
 }

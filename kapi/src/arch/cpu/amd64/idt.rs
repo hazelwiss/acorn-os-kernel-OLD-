@@ -1,8 +1,6 @@
-use core::arch::asm;
+use kutil::once;
 use lazy_static::lazy_static;
 use spin::Mutex;
-
-use crate::util::once;
 
 #[derive(Clone, Copy)]
 #[repr(C, packed)]

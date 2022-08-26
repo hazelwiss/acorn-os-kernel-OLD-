@@ -1,9 +1,6 @@
+use crate::arch::family::x86::port::{in8, out8};
+use kutil::once;
 use spin::mutex::Mutex;
-
-use crate::{
-    arch::family::x86::port::{in8, out8},
-    util::once,
-};
 
 pub fn init() {
     once!(

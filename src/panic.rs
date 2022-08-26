@@ -1,6 +1,8 @@
 #[panic_handler]
 unsafe fn panic_handler(info: &core::panic::PanicInfo) -> ! {
-    let msg = info.message().unwrap();
-    log!("[PANIC] {msg}");
+    let location = info.location().unwrap();
+    let msg = info.message().unwrap_unchecked();
+    log!("[PANIC] {msg}\n");
+    log!("{}", location);
     loop {}
 }

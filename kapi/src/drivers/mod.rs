@@ -1,4 +1,4 @@
-use crate::util::once;
+use kutil::once;
 
 pub mod console;
 pub mod serial_out;

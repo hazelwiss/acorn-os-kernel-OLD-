@@ -1,6 +1,6 @@
-use crate::{hal, util::once};
-
 use super::Driver;
+use crate::hal;
+use kutil::once;
 use spin::Mutex;
 
 struct State {

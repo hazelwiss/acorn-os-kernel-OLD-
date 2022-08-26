@@ -1,88 +1,148 @@
+use super::{paging, wma};
+use crate::symbols;
 use core::{
     alloc::{GlobalAlloc, Layout},
+    mem::size_of,
     ptr,
+    slice::from_raw_parts_mut,
 };
+use kutil::math;
+use spin::Once;
 
-use lazy_static::lazy_static;
-use spin::Mutex;
+const BLOCK_COUNT: usize = 512;
+const BLOCK_SIZE: usize = paging::PAGE_SIZE;
 
-extern "C" {
-    static __heap_size: usize;
-    static __heap_start: usize;
-    static __heap_end: usize;
+#[repr(C, packed)]
+struct Block {
+    data: [u8; BLOCK_SIZE],
 }
 
-const BLOCKS: usize = 4096;
-const PAGE_SIZE: usize = 4096;
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct BlocKDesc(u8);
 
-lazy_static! {
-    static ref HEAP_START: usize = unsafe { (&__heap_start as *const _) as usize };
-    static ref HEAP_END: usize = unsafe { (&__heap_end as *const _) as usize };
-    static ref HEAP_SIZE: usize = unsafe { (&__heap_size as *const _) as usize };
+impl BlocKDesc {
+    fn new_free() -> Self {
+        Self(0)
+    }
+
+    fn new_allocated() -> Self {
+        Self(1)
+    }
+
+    fn is_free(&self) -> bool {
+        self.0 == 0
+    }
+
+    fn is_allocated(&self) -> bool {
+        !self.is_free()
+    }
 }
 
-struct Heap;
+struct Heap {
+    block_offset: usize,
+    block_desc_offset: usize,
+}
+
+impl Heap {
+    fn init(&mut self) {
+        assert!(symbols::wma_bounds().start % paging::PAGE_SIZE == 0);
+        assert!(symbols::wma_size() % paging::PAGE_SIZE == 0);
+        assert!(BLOCK_SIZE == paging::PAGE_SIZE && size_of::<Block>() == BLOCK_SIZE);
+        assert!(size_of::<BlocKDesc>() == 1);
+        let block_desc_size = BLOCK_COUNT;
+        let block_size = BLOCK_COUNT * size_of::<Block>();
+        assert!(block_size + block_desc_size < symbols::wma_size());
+        self.block_desc_offset =
+            unsafe { wma::alloc_many::<BlocKDesc>(BLOCK_COUNT).as_ptr() as usize };
+        self.block_offset = unsafe { wma::alloc_many::<Block>(BLOCK_COUNT).as_ptr() as usize };
+        for block in self.get_block_desc() {
+            *block = BlocKDesc::new_free();
+        }
+    }
+
+    fn get_blocks(&self) -> &'static mut [Block] {
+        unsafe { from_raw_parts_mut(self.block_offset as *mut Block, BLOCK_COUNT) }
+    }
+
+    fn get_block_desc(&self) -> &'static mut [BlocKDesc] {
+        unsafe { from_raw_parts_mut(self.block_desc_offset as *mut BlocKDesc, BLOCK_COUNT) }
+    }
+
+    fn ptr_to_index<T>(&self, ptr: *const T) -> usize {
+        let ptr = ptr as usize;
+        assert!(ptr >= self.block_offset && ptr < self.block_offset + BLOCK_COUNT * BLOCK_SIZE);
+        let ptr = ptr - self.block_offset;
+        ptr / BLOCK_SIZE
+    }
+
+    fn index_to_ptr<T>(&self, index: usize) -> *mut T {
+        assert!(index < BLOCK_COUNT);
+        let ptr = self.block_offset + index * BLOCK_SIZE;
+        ptr as *mut T
+    }
+
+    fn find_empty_consecutive(&self, count: usize) -> Option<usize> {
+        let mut i = 0;
+        let empty_blocks = self.get_block_desc();
+        while i < BLOCK_COUNT {
+            let mut found = 0;
+            let start_index = i;
+            while empty_blocks[i].is_free() && found < count && i < BLOCK_COUNT {
+                found += 1;
+                i += 1;
+            }
+            if found >= count {
+                return Some(start_index);
+            }
+            i += (found == 0) as usize;
+        }
+        None
+    }
+
+    fn get_block_count_from_size(&self, size: usize) -> usize {
+        (size / BLOCK_SIZE) + (size % BLOCK_SIZE != 0) as usize
+    }
+}
 
 unsafe impl GlobalAlloc for Heap {
-    unsafe fn alloc(&self, layout: core::alloc::Layout) -> *mut u8 {
-        let block_count = get_block_count(layout.size());
-        let index = find_empty_consecutive_blocks(block_count);
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        assert!(INIT.is_completed());
+        let allocated_blocks = self.get_block_count_from_size(layout.size());
+        let index = self.find_empty_consecutive(allocated_blocks);
         if let Some(index) = index {
-            let ptr = *HEAP_START + index * PAGE_SIZE;
-            let mut free_blocks = EMPTY_BLOCKS.lock();
-            for i in 0..block_count {
-                free_blocks[i + index] = false;
+            let blocks = self.get_block_desc();
+            for i in 0..allocated_blocks {
+                blocks[i + index] = BlocKDesc::new_allocated();
             }
-            ptr as *mut u8
+            self.index_to_ptr(index)
         } else {
             ptr::null_mut()
         }
     }
 
-    unsafe fn dealloc(&self, ptr: *mut u8, layout: core::alloc::Layout) {
-        let adr = ptr as usize;
-        let size = layout.size();
-        assert!(
-            adr >= *HEAP_START && adr + size < *HEAP_END,
-            "attempting to deallocate outside of heap range with the adr 0x{adr:X} and size {size}"
-        );
-        let index = (adr - *HEAP_START) / PAGE_SIZE;
-        let count = get_block_count(size);
-        let mut free_blocks = EMPTY_BLOCKS.lock();
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+        assert!(INIT.is_completed());
+        let index = self.ptr_to_index(ptr);
+        let count = self.get_block_count_from_size(layout.size());
+        let blocks = self.get_block_desc();
         for i in 0..count {
-            free_blocks[i + index] = true;
+            let index = index + i;
+            blocks[index] = BlocKDesc::new_free();
         }
     }
-}
-
-fn find_empty_consecutive_blocks(count: usize) -> Option<usize> {
-    let mut i = 0;
-    let empty_blocks = EMPTY_BLOCKS.lock();
-    while i < BLOCKS {
-        let mut found = 0;
-        let start_index = i;
-        while empty_blocks[i] && found < count && i < BLOCKS {
-            found += 1;
-            i += 1;
-        }
-        if found >= count {
-            return Some(start_index);
-        }
-        i += (found == 0) as usize;
-    }
-    None
-}
-
-fn get_block_count(size: usize) -> usize {
-    (size / PAGE_SIZE) + (size % PAGE_SIZE != 0) as usize
 }
 
 #[global_allocator]
-static ALLOCATOR: Heap = Heap {};
+static mut ALLOCATOR: Heap = Heap {
+    block_offset: 0,
+    block_desc_offset: 0,
+};
 
-static EMPTY_BLOCKS: Mutex<[bool; BLOCKS]> = Mutex::new([true; BLOCKS]);
+static INIT: Once = Once::new();
 
-#[alloc_error_handler]
-fn alloc_error(layout: Layout) -> ! {
-    panic!("allocation error with layout {layout:?}")
+pub fn init() {
+    INIT.call_once(|| unsafe {
+        ALLOCATOR.init();
+    });
 }

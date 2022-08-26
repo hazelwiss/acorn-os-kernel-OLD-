@@ -1,4 +1,4 @@
-use crate::util::{mem, once};
+use kutil::{mem, once};
 use spin::Mutex;
 
 const VGA_BASE_ADR: usize = 0xB8000;

@@ -1,4 +1,4 @@
-use crate::{drivers, kapi::util::once, shell};
+use crate::{drivers, kutil::once};
 use core::fmt;
 use spin::Mutex;
 
@@ -6,7 +6,6 @@ struct Writer;
 
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
-        shell::puts(s);
         drivers::serial_out::puts(s);
         Ok(())
     }

@@ -1,3 +1,7 @@
+#![no_std]
+#![allow(dead_code)]
+
+pub mod math;
 pub mod mem;
 
 #[macro_export]
@@ -9,5 +13,3 @@ macro_rules! once {
         }
     };
 }
-
-pub use once;

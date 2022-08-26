@@ -3,7 +3,6 @@ ENTRY(stage1)
 SECTIONS {
     __kernel_load_adr = 0x01000000;
     __kernel_stack_top = 0x00EFFFF0;
-    __heap_size = 16M; 
 
     . = 0x500;
     __disk_load_buffer = .;
@@ -31,9 +30,9 @@ SECTIONS {
         *(.eh_frame_hdr)
         *(.bss .bss.*)
         . = ALIGN(4K);
-        __heap_start = .;
-        . += __heap_size;
-        __heap_end = .;
+        __wma_start = .;
+        . += 48M;
+        __wma_end = .;
         . = ALIGN(512);
         __kernel_load_size = . - __kernel_load_beg;
     }
