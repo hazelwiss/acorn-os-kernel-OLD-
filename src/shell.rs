@@ -1,6 +1,6 @@
-use crate::drivers::console;
+use crate::drivers::{console};
 use alloc::{
-    string::{String, ToString},
+    string::{String},
     vec::Vec,
 };
 use core::mem;
@@ -86,5 +86,8 @@ pub fn getc() -> char {
 pub fn run() {
     LOG.lock().reapply_to_console();
     let mut string = String::new();
-    loop {}
+    loop {
+        //super::kapi::arch::cpu::amd64::irq::wait();
+        if let Some(c) = kuti
+    }
 }

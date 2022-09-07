@@ -2,15 +2,17 @@
 #![no_main]
 #![feature(panic_info_message)]
 #![feature(alloc_error_handler)]
+#![feature(const_maybe_uninit_zeroed)]
 #![allow(dead_code)]
+#![feature(bench_black_box)]
 
 #[macro_use]
 extern crate alloc;
-extern crate kapi;
-extern crate kutil;
 
 #[macro_use]
 mod log;
+mod kapi;
+mod kutil;
 mod mem;
 mod panic;
 mod shell;
@@ -20,14 +22,15 @@ use kapi::{arch, drivers, hal};
 
 #[no_mangle]
 pub unsafe extern "C" fn kmain() -> ! {
-    drivers::init();
+    kapi::init();
     mem::init();
     hal::console::clear();
     loginf!("booting kernel!");
     logok!("drivers initialized.");
     loginf!("Acorn OS");
+    loginf!("enabling interrupts.");
+    hal::irq::geirq();
     loginf!("starting shell.");
-    //let _string_crash = alloc::string::String::with_capacity(1000000000);
     shell::run();
     logerr!("hit kernel endpoint! Halting...");
     loop {}

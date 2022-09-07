@@ -6,7 +6,6 @@ use core::{
     ptr,
     slice::from_raw_parts_mut,
 };
-use kutil::math;
 use spin::Once;
 
 const BLOCK_COUNT: usize = 512;
@@ -88,7 +87,7 @@ impl Heap {
         while i < BLOCK_COUNT {
             let mut found = 0;
             let start_index = i;
-            while empty_blocks[i].is_free() && found < count && i < BLOCK_COUNT {
+            while i < BLOCK_COUNT && found < count && empty_blocks[i].is_free() {
                 found += 1;
                 i += 1;
             }
@@ -117,6 +116,7 @@ unsafe impl GlobalAlloc for Heap {
             }
             self.index_to_ptr(index)
         } else {
+            logerr!("Unable to allocate enough empty consecutive blocks.");
             ptr::null_mut()
         }
     }

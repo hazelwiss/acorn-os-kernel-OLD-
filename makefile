@@ -12,7 +12,7 @@ build_debug:
 
 .PHONY: qemu
 qemu: build_debug 
-	qemu-system-x86_64 -drive format=raw,file=${DEBUG_OUT} -s -S --no-reboot -monitor stdio -d in_asm -m 512
+	qemu-system-x86_64 -drive format=raw,file=${DEBUG_OUT} -s -S --no-reboot -monitor stdio -d in_asm -m 1024M
 
 .PHONY: clean
 clean:

@@ -8,6 +8,7 @@ pub struct Bounds {
     pub end: usize,
 }
 
+#[inline]
 pub fn wma_bounds() -> Bounds {
     unsafe {
         Bounds {
@@ -17,6 +18,7 @@ pub fn wma_bounds() -> Bounds {
     }
 }
 
+#[inline]
 pub fn wma_size() -> usize {
     wma_bounds().end - wma_bounds().start
 }
