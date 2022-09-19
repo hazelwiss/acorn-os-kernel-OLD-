@@ -1,4 +1,4 @@
-use crate::{kapi::arch::get_arch_interfaces, once};
+use crate::{arch::get_arch_interfaces, once};
 
 pub struct IDesc {
     pub init: fn(),

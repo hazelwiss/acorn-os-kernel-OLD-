@@ -1,4 +1,4 @@
-use crate::kapi::{arch, hal::except::ExceptType, once};
+use crate::{arch, hal::except::ExceptType, once};
 
 pub fn init() {
     once! {
@@ -14,10 +14,10 @@ pub fn geexc() {
     todo!()
 }
 
-pub fn dexc(ty: ExceptType) {
+pub fn dexc(_ty: ExceptType) {
     todo!()
 }
 
-pub fn eexc(ty: ExceptType) {
+pub fn eexc(_ty: ExceptType) {
     todo!()
 }

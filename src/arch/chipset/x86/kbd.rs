@@ -1,4 +1,3 @@
-use super::pic;
 use crate::{arch::family::x86::port::in8, once};
 use spin::Mutex;
 
@@ -11,7 +10,7 @@ impl Keyboard {
         self.read.take()
     }
 
-    fn putb(&self, b: u8) {
+    fn putb(&self, _b: u8) {
         todo!()
     }
 

@@ -12,12 +12,14 @@ extern crate self as klib;
 
 #[macro_use]
 pub mod log;
+pub mod arch;
+pub mod drivers;
 pub mod fs;
-pub mod kapi;
+pub mod hal;
+pub mod irq;
+pub mod keyboard;
 pub mod kutil;
 pub mod mem;
 pub mod panic;
 pub mod shell;
 pub mod symbols;
-
-pub use kapi::{arch, drivers};

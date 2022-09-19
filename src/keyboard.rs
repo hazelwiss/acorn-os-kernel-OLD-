@@ -2,136 +2,136 @@
 #[macro_export]
 macro_rules! key {
     (0) => {
-        ::klib::kapi::drivers::ps2::Key::Num0
+        ::klib::drivers::ps2::Key::Num0
     };
     (1) => {
-        ::klib::kapi::drivers::ps2::Key::Num1
+        ::klib::drivers::ps2::Key::Num1
     };
     (2) => {
-        ::klib::kapi::drivers::ps2::Key::Num2
+        ::klib::drivers::ps2::Key::Num2
     };
     (3) => {
-        ::klib::kapi::drivers::ps2::Key::Num3
+        ::klib::drivers::ps2::Key::Num3
     };
     (4) => {
-        ::klib::kapi::drivers::ps2::Key::Num4
+        ::klib::drivers::ps2::Key::Num4
     };
     (5) => {
-        ::klib::kapi::drivers::ps2::Key::Num5
+        ::klib::drivers::ps2::Key::Num5
     };
     (6) => {
-        ::klib::kapi::drivers::ps2::Key::Num6
+        ::klib::drivers::ps2::Key::Num6
     };
     (7) => {
-        ::klib::kapi::drivers::ps2::Key::Num7
+        ::klib::drivers::ps2::Key::Num7
     };
     (8) => {
-        ::klib::kapi::drivers::ps2::Key::Num8
+        ::klib::drivers::ps2::Key::Num8
     };
     (9) => {
-        ::klib::kapi::drivers::ps2::Key::Num9
+        ::klib::drivers::ps2::Key::Num9
     };
     (a) => {
-        ::klib::kapi::drivers::ps2::Key::A
+        ::klib::drivers::ps2::Key::A
     };
     (b) => {
-        ::klib::kapi::drivers::ps2::Key::B
+        ::klib::drivers::ps2::Key::B
     };
     (c) => {
-        ::klib::kapi::drivers::ps2::Key::C
+        ::klib::drivers::ps2::Key::C
     };
     (d) => {
-        ::klib::kapi::drivers::ps2::Key::D
+        ::klib::drivers::ps2::Key::D
     };
     (e) => {
-        ::klib::kapi::drivers::ps2::Key::E
+        ::klib::drivers::ps2::Key::E
     };
     (f) => {
-        ::klib::kapi::drivers::ps2::Key::F
+        ::klib::drivers::ps2::Key::F
     };
     (g) => {
-        ::klib::kapi::drivers::ps2::Key::G
+        ::klib::drivers::ps2::Key::G
     };
     (h) => {
-        ::klib::kapi::drivers::ps2::Key::H
+        ::klib::drivers::ps2::Key::H
     };
     (i) => {
-        ::klib::kapi::drivers::ps2::Key::I
+        ::klib::drivers::ps2::Key::I
     };
     (j) => {
-        ::klib::kapi::drivers::ps2::Key::J
+        ::klib::drivers::ps2::Key::J
     };
     (k) => {
-        ::klib::kapi::drivers::ps2::Key::K
+        ::klib::drivers::ps2::Key::K
     };
     (l) => {
-        ::klib::kapi::drivers::ps2::Key::L
+        ::klib::drivers::ps2::Key::L
     };
     (m) => {
-        ::klib::kapi::drivers::ps2::Key::M
+        ::klib::drivers::ps2::Key::M
     };
     (n) => {
-        ::klib::kapi::drivers::ps2::Key::N
+        ::klib::drivers::ps2::Key::N
     };
     (o) => {
-        ::klib::kapi::drivers::ps2::Key::O
+        ::klib::drivers::ps2::Key::O
     };
     (p) => {
-        ::klib::kapi::drivers::ps2::Key::P
+        ::klib::drivers::ps2::Key::P
     };
     (q) => {
-        ::klib::kapi::drivers::ps2::Key::Q
+        ::klib::drivers::ps2::Key::Q
     };
     (r) => {
-        ::klib::kapi::drivers::ps2::Key::R
+        ::klib::drivers::ps2::Key::R
     };
     (s) => {
-        ::klib::kapi::drivers::ps2::Key::S
+        ::klib::drivers::ps2::Key::S
     };
     (t) => {
-        ::klib::kapi::drivers::ps2::Key::T
+        ::klib::drivers::ps2::Key::T
     };
     (u) => {
-        ::klib::kapi::drivers::ps2::Key::U
+        ::klib::drivers::ps2::Key::U
     };
     (v) => {
-        ::klib::kapi::drivers::ps2::Key::V
+        ::klib::drivers::ps2::Key::V
     };
     (w) => {
-        ::klib::kapi::drivers::ps2::Key::W
+        ::klib::drivers::ps2::Key::W
     };
     (x) => {
-        ::klib::kapi::drivers::ps2::Key::X
+        ::klib::drivers::ps2::Key::X
     };
     (y) => {
-        ::klib::kapi::drivers::ps2::Key::Y
+        ::klib::drivers::ps2::Key::Y
     };
     (z) => {
-        ::klib::kapi::drivers::ps2::Key::Z
+        ::klib::drivers::ps2::Key::Z
     };
     (=) => {
-        ::klib::kapi::drivers::ps2::Key::DoubleBar
+        ::klib::drivers::ps2::Key::DoubleBar
     };
     (-) => {
-        ::klib::kapi::drivers::ps2::Key::Hyphen
+        ::klib::drivers::ps2::Key::Hyphen
     };
     (:) => {
-        ::klib::kapi::drivers::ps2::Key::Colon
+        ::klib::drivers::ps2::Key::Colon
     };
     (,) => {
-        ::klib::kapi::drivers::ps2::Key::Comma
+        ::klib::drivers::ps2::Key::Comma
     };
     (.) => {
-        ::klib::kapi::drivers::ps2::Key::Dot
+        ::klib::drivers::ps2::Key::Dot
     };
     (/) => {
-        ::klib::kapi::drivers::ps2::Key::FSlash
+        ::klib::drivers::ps2::Key::FSlash
     };
     ( ) => {
-        ::klib::kapi::drivers::ps2::Key::Space
+        ::klib::drivers::ps2::Key::Space
     };
     (*) => {
-        ::klib::kapi::drivers::ps2::Key::Asterix
+        ::klib::drivers::ps2::Key::Asterix
     };
 }
 

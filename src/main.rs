@@ -9,16 +9,17 @@
 #[macro_use]
 extern crate klib;
 
-use klib::{drivers, kapi, mem, shell};
+use klib::{drivers, hal, irq, mem, shell};
 
 #[no_mangle]
 pub unsafe extern "C" fn kmain() -> ! {
-    kapi::init();
+    hal::init();
+    drivers::init();
     mem::init();
     drivers::console::clear();
     loginf!("booting kernel!");
     logok!("drivers initialized.");
-    drivers::irq::enable();
+    irq::enable();
     logok!("interrupts enabled.");
     loginf!("starting shell.");
     shell::run();

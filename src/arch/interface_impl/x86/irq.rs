@@ -1,4 +1,4 @@
-use crate::kapi::{arch, hal::irq::InterruptType, once};
+use crate::{arch, hal::irq::InterruptType, once};
 
 pub fn init() {
     once! {
@@ -14,11 +14,11 @@ pub fn geirq() {
     arch::cpu::amd64::irq::enable();
 }
 
-pub fn dirq(ty: InterruptType) {
+pub fn dirq(_ty: InterruptType) {
     todo!()
 }
 
-pub fn eirq(ty: InterruptType) {
+pub fn eirq(_ty: InterruptType) {
     todo!()
 }
 

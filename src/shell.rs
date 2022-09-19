@@ -1,9 +1,8 @@
 use crate::{
     drivers::console,
-    kapi::{
-        drivers::{irq, ps2},
-        keyboard::{Key, KeyState},
-    },
+    drivers::ps2,
+    irq,
+    keyboard::{Key, KeyState},
 };
 use alloc::{string::String, vec::Vec};
 use core::mem;

@@ -1,5 +1,5 @@
 use crate::{
-    kapi::arch::family::x86::port::{in8_delay, out8_delay},
+    arch::family::x86::port::{in8_delay, out8_delay},
     once,
 };
 use spin::Mutex;

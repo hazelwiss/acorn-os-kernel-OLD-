@@ -1,8 +1,8 @@
 mod except;
 mod irq;
 
-use crate::kapi::{
-    arch::chipset,
+use crate::{
+    arch::{chipset, cpu},
     hal::{self, ArchInterfaces},
 };
 
@@ -45,6 +45,14 @@ pub const fn get_arch_interfaces() -> ArchInterfaces {
             getb: chipset::x86::kbd::getb,
             empty_buf: chipset::x86::kbd::empty_buf,
             buf_size: chipset::x86::kbd::buf_size,
+        },
+        paging: hal::paging::IDesc {
+            init: cpu::amd64::paging::init,
+            pg_size: cpu::amd64::paging::pg_size,
+            alloc: cpu::amd64::paging::alloc,
+            dealloc: cpu::amd64::paging::dealloc,
+            map: cpu::amd64::paging::map,
+            unmap: cpu::amd64::paging::unmap,
         },
     }
 }

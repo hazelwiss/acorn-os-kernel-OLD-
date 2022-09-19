@@ -1,16 +1,7 @@
-use super::Driver;
-use crate::kapi::hal::irq;
+use crate::hal::irq;
 use spin::Mutex;
 
-pub struct State {}
-
-impl Driver for State {
-    fn init(&self) {}
-
-    fn name(&self) -> &'static str {
-        "IRQ driver"
-    }
-}
+struct State {}
 
 impl State {
     pub fn enable(&self) {

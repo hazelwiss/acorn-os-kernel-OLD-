@@ -1,11 +1,10 @@
+use super::isr::StackFrame;
 use crate::{
+    arch::chipset::x86::kbd,
     arch::{chipset::x86::pic, cpu::amd64::idt},
-    kapi::arch::chipset::x86::kbd,
     once,
 };
 use core::arch::asm;
-
-use super::isr::StackFrame;
 
 pub fn is_irq_enabled() -> bool {
     todo!()

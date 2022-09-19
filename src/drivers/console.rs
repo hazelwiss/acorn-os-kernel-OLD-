@@ -1,22 +1,15 @@
-use super::Driver;
-use crate::kapi::{hal, once};
+use crate::{hal, once};
 use spin::Mutex;
 
 struct State {
     pos: Pos,
 }
 
-impl Driver for State {
-    fn init(&self) {
-        once!();
-    }
-
-    fn name(&self) -> &'static str {
-        "Serial out driver."
-    }
-}
-
 impl State {
+    fn init(&self) {
+        once! {}
+    }
+
     fn putc(&self, c: char) {
         match c {
             '\n' => hal::console::new_line(),

@@ -9,12 +9,6 @@ use core::{
 use spin::Once;
 
 const BLOCK_COUNT: usize = 512;
-const BLOCK_SIZE: usize = paging::PAGE_SIZE;
-
-#[repr(C, packed)]
-struct Block {
-    data: [u8; BLOCK_SIZE],
-}
 
 #[repr(C)]
 #[derive(Clone, Copy)]
@@ -45,23 +39,24 @@ struct Heap {
 
 impl Heap {
     fn init(&mut self) {
-        assert!(symbols::wma_bounds().start % paging::PAGE_SIZE == 0);
-        assert!(symbols::wma_size() % paging::PAGE_SIZE == 0);
-        assert!(BLOCK_SIZE == paging::PAGE_SIZE && size_of::<Block>() == BLOCK_SIZE);
+        let page_size = paging::pg_size();
+        assert!(symbols::wma_bounds().start % page_size == 0);
+        assert!(symbols::wma_size() % page_size == 0);
         assert!(size_of::<BlocKDesc>() == 1);
-        let block_desc_size = BLOCK_COUNT;
-        let block_size = BLOCK_COUNT * size_of::<Block>();
-        assert!(block_size + block_desc_size < symbols::wma_size());
+        let block_desc_alloc = BLOCK_COUNT;
+        let block_alloc = BLOCK_COUNT * Self::block_size();
+        assert!(block_alloc + block_desc_alloc < symbols::wma_size());
         self.block_desc_offset =
             unsafe { wma::alloc_many::<BlocKDesc>(BLOCK_COUNT).as_ptr() as usize };
-        self.block_offset = unsafe { wma::alloc_many::<Block>(BLOCK_COUNT).as_ptr() as usize };
+        self.block_offset =
+            unsafe { wma::alloc_many::<u8>(BLOCK_COUNT * Self::block_size()).as_ptr() as usize };
         for block in self.get_block_desc() {
             *block = BlocKDesc::new_free();
         }
     }
 
-    fn get_blocks(&self) -> &'static mut [Block] {
-        unsafe { from_raw_parts_mut(self.block_offset as *mut Block, BLOCK_COUNT) }
+    fn block_size() -> usize {
+        paging::pg_size()
     }
 
     fn get_block_desc(&self) -> &'static mut [BlocKDesc] {
@@ -70,14 +65,16 @@ impl Heap {
 
     fn ptr_to_index<T>(&self, ptr: *const T) -> usize {
         let ptr = ptr as usize;
-        assert!(ptr >= self.block_offset && ptr < self.block_offset + BLOCK_COUNT * BLOCK_SIZE);
+        assert!(
+            ptr >= self.block_offset && ptr < self.block_offset + BLOCK_COUNT * Self::block_size()
+        );
         let ptr = ptr - self.block_offset;
-        ptr / BLOCK_SIZE
+        ptr / Self::block_size()
     }
 
     fn index_to_ptr<T>(&self, index: usize) -> *mut T {
         assert!(index < BLOCK_COUNT);
-        let ptr = self.block_offset + index * BLOCK_SIZE;
+        let ptr = self.block_offset + index * Self::block_size();
         ptr as *mut T
     }
 
@@ -100,7 +97,7 @@ impl Heap {
     }
 
     fn get_block_count_from_size(&self, size: usize) -> usize {
-        (size / BLOCK_SIZE) + (size % BLOCK_SIZE != 0) as usize
+        (size / Self::block_size()) + (size % Self::block_size() != 0) as usize
     }
 }
 

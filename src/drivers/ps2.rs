@@ -1,11 +1,8 @@
 use spin::Mutex;
 
-use super::Driver;
 use crate::{
-    kapi::{
-        hal::keyboard,
-        keyboard::{key, Key, KeyState},
-    },
+    hal::keyboard,
+    keyboard::{key, Key, KeyState},
     once,
 };
 
@@ -16,18 +13,6 @@ pub enum KbdLayout {
 
 pub struct State {
     layout: KbdLayout,
-}
-
-impl Driver for State {
-    fn init(&self) {
-        once! {
-            keyboard::init();
-        }
-    }
-
-    fn name(&self) -> &'static str {
-        "PS2 driver"
-    }
 }
 
 macro_rules! pk {
@@ -117,6 +102,10 @@ macro_rules! kbd_se {
 }
 
 impl State {
+    fn init(&self) {
+        once! {}
+    }
+
     fn getk(&self) -> Option<KeyState> {
         if let Some(b) = keyboard::getb() {
             Some(match self.layout {

@@ -1,8 +1,7 @@
+use super::gdt;
 use crate::once;
 use core::arch::asm;
 use spin::Mutex;
-
-use super::gdt;
 
 #[repr(u8)]
 enum Attribute {
