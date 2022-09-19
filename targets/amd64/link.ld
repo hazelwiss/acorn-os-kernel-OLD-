@@ -5,6 +5,7 @@ OUTPUT_ARCH(i386:x86-64)
 SECTIONS {
     __kernel_load_adr = 0x01000000;
     __kernel_virt_adr = 0xFFFFFFFF80000000;
+    __kernel_virt_end = 0xFFFFFFFFFFFFFFFF;
     __bootstrap_bss_base_adr = 0x00100000;
 
     . = 0x500;
