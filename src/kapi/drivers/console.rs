@@ -1,5 +1,5 @@
 use super::Driver;
-use crate::{hal, once};
+use crate::kapi::{hal, once};
 use spin::Mutex;
 
 struct State {
@@ -8,7 +8,7 @@ struct State {
 
 impl Driver for State {
     fn init(&self) {
-        init()
+        once!();
     }
 
     fn name(&self) -> &'static str {
@@ -44,7 +44,7 @@ impl State {
     }
 }
 
-const CONSOLE: Mutex<State> = Mutex::new(State {
+static CONSOLE: Mutex<State> = Mutex::new(State {
     pos: Pos { col: 0, row: 0 },
 });
 
@@ -61,7 +61,7 @@ pub struct Dimensions {
 }
 
 pub fn init() {
-    once!();
+    CONSOLE.lock().init()
 }
 
 pub fn putc(c: char) {

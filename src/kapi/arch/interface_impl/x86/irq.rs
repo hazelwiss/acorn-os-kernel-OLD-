@@ -1,4 +1,4 @@
-use crate::{hal::irq::InterruptType, kapi::arch, once};
+use crate::kapi::{arch, hal::irq::InterruptType, once};
 
 pub fn init() {
     once! {
@@ -22,4 +22,6 @@ pub fn eirq(ty: InterruptType) {
     todo!()
 }
 
-pub fn irq_kbd() {}
+pub fn wait() {
+    arch::cpu::amd64::irq::wait()
+}

@@ -7,29 +7,19 @@
 #![feature(bench_black_box)]
 
 #[macro_use]
-extern crate alloc;
+extern crate klib;
 
-#[macro_use]
-mod log;
-mod kapi;
-mod kutil;
-mod mem;
-mod panic;
-mod shell;
-mod symbols;
-
-use kapi::{arch, drivers, hal};
+use klib::{drivers, kapi, mem, shell};
 
 #[no_mangle]
 pub unsafe extern "C" fn kmain() -> ! {
     kapi::init();
     mem::init();
-    hal::console::clear();
+    drivers::console::clear();
     loginf!("booting kernel!");
     logok!("drivers initialized.");
-    loginf!("Acorn OS");
-    loginf!("enabling interrupts.");
-    hal::irq::geirq();
+    drivers::irq::enable();
+    logok!("interrupts enabled.");
     loginf!("starting shell.");
     shell::run();
     logerr!("hit kernel endpoint! Halting...");

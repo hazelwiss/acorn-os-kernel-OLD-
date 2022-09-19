@@ -1,4 +1,4 @@
-use crate::{hal::except::ExceptType, kapi::arch, once};
+use crate::kapi::{arch, hal::except::ExceptType, once};
 
 pub fn init() {
     once! {

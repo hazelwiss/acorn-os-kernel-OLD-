@@ -1,5 +1,3 @@
-use spin::Mutex;
-
 use crate::{arch::get_arch_interfaces, once};
 
 pub enum ExceptType {}
@@ -16,10 +14,10 @@ pub struct IDesc {
     pub eexc: fn(ExceptType),
 }
 
-static IEXCEPT: Mutex<IDesc> = Mutex::new(get_arch_interfaces().except);
+static IEXCEPT: IDesc = get_arch_interfaces().except;
 
 pub fn init() {
     once! {
-        (IEXCEPT.lock().init)();
+        (IEXCEPT.init)();
     }
 }

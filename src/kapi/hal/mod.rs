@@ -23,5 +23,6 @@ pub fn init() {
         fb::init();
         irq::init();
         serial::init();
+        keyboard::init();
     )
 }

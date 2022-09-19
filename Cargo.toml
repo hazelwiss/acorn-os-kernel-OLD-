@@ -3,6 +3,14 @@ name = "kernel"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+
+[lib]
+name = "klib"
+path = "src/lib.rs"
+
 [dependencies]
 spin = "0.9.4"
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }

@@ -1,12 +1,14 @@
 use super::Driver;
-use crate::{hal, once};
+use crate::kapi::{hal, once};
 use spin::Mutex;
 
 struct State {}
 
 impl Driver for State {
     fn init(&self) {
-        init()
+        once!(
+            hal::serial::init();
+        );
     }
 
     fn name(&self) -> &'static str {
@@ -32,12 +34,10 @@ impl State {
     }
 }
 
-const SERIAL_OUT: Mutex<State> = Mutex::new(State {});
+static SERIAL_OUT: Mutex<State> = Mutex::new(State {});
 
 pub fn init() {
-    once!(
-        hal::serial::init();
-    );
+    SERIAL_OUT.lock().init()
 }
 
 pub fn putc(c: char) {

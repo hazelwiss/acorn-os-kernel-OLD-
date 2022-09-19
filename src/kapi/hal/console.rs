@@ -1,5 +1,4 @@
 use crate::{arch::get_arch_interfaces, once};
-use spin::Mutex;
 
 pub struct IDesc {
     pub init: fn(),
@@ -11,34 +10,34 @@ pub struct IDesc {
     pub clear: fn(),
 }
 
-const ICONSOLE: Mutex<&IDesc> = Mutex::new(&get_arch_interfaces().console);
+static ICONSOLE: IDesc = get_arch_interfaces().console;
 
 pub fn init() {
     once!(
-        (ICONSOLE.lock().init)();
+        (ICONSOLE.init)();
     )
 }
 
 pub fn putc(c: char) {
-    (ICONSOLE.lock().putc)(c);
+    (ICONSOLE.putc)(c);
 }
 
 pub fn puts(s: &str) {
-    (ICONSOLE.lock().puts)(s);
+    (ICONSOLE.puts)(s);
 }
 
 pub fn get_w() -> usize {
-    (ICONSOLE.lock().get_w)()
+    (ICONSOLE.get_w)()
 }
 
 pub fn get_h() -> usize {
-    (ICONSOLE.lock().get_h)()
+    (ICONSOLE.get_h)()
 }
 
 pub fn new_line() {
-    (ICONSOLE.lock().new_line)();
+    (ICONSOLE.new_line)();
 }
 
 pub fn clear() {
-    (ICONSOLE.lock().clear)();
+    (ICONSOLE.clear)();
 }

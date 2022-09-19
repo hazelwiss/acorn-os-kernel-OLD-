@@ -1,7 +1,7 @@
 mod except;
 mod irq;
 
-use crate::{
+use crate::kapi::{
     arch::chipset,
     hal::{self, ArchInterfaces},
 };
@@ -30,7 +30,7 @@ pub const fn get_arch_interfaces() -> ArchInterfaces {
             geirq: irq::geirq,
             dirq: irq::dirq,
             eirq: irq::eirq,
-            irq_kbd: irq::irq_kbd,
+            wait: irq::wait,
         },
         except: hal::except::IDesc {
             init: except::init,
@@ -43,7 +43,8 @@ pub const fn get_arch_interfaces() -> ArchInterfaces {
             init: chipset::x86::kbd::init,
             putb: chipset::x86::kbd::putb,
             getb: chipset::x86::kbd::getb,
-            getc: chipset::x86::kbd::getc,
+            empty_buf: chipset::x86::kbd::empty_buf,
+            buf_size: chipset::x86::kbd::buf_size,
         },
     }
 }

@@ -1,5 +1,3 @@
-use spin::Mutex;
-
 use crate::{arch::get_arch_interfaces, once};
 
 pub enum InterruptType {
@@ -16,24 +14,29 @@ pub struct IDesc {
     pub dirq: fn(InterruptType),
     /// enable interrupt
     pub eirq: fn(InterruptType),
-    // different interrupts
-    pub irq_kbd: fn(),
+    /// waits for interrupt
+    pub wait: fn(),
 }
 
-static IIRQ: Mutex<IDesc> = Mutex::new(get_arch_interfaces().irq);
+static IIRQ: IDesc = get_arch_interfaces().irq;
 
 pub fn init() {
     once!(
-        (IIRQ.lock().init)();
+        (IIRQ.init)();
     )
 }
 
 /// global disable irq
 pub fn gdirq() {
-    (IIRQ.lock().gdirq)();
+    (IIRQ.gdirq)();
 }
 
 /// global enable irq
 pub fn geirq() {
-    (IIRQ.lock().geirq)();
+    (IIRQ.geirq)();
+}
+
+/// halts program execution
+pub fn wait() {
+    (IIRQ.wait)()
 }

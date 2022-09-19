@@ -1,8 +1,11 @@
-use crate::drivers::{console};
-use alloc::{
-    string::{String},
-    vec::Vec,
+use crate::{
+    drivers::console,
+    kapi::{
+        drivers::{irq, ps2},
+        keyboard::{Key, KeyState},
+    },
 };
+use alloc::{string::String, vec::Vec};
 use core::mem;
 use spin::Mutex;
 
@@ -25,6 +28,7 @@ impl Shell {
         }
     }
 
+    #[inline]
     fn putc_no_reapply(&mut self, c: char) {
         match c {
             '\n' => self.new_line(),
@@ -40,6 +44,7 @@ impl Shell {
         todo!()
     }
 
+    #[inline]
     fn new_line(&mut self) {
         let mut move_str = String::with_capacity(console::get_dimensions().width);
         mem::swap(&mut self.cur_line, &mut move_str);
@@ -63,6 +68,37 @@ impl Shell {
         console::puts(&self.cur_line);
         console::puts(&format!("> {}", self.input_str));
     }
+
+    fn clear(&mut self) {
+        self.log_lines = vec![];
+        self.cur_line = String::new();
+    }
+
+    fn help(&self) {}
+
+    fn pressed(&mut self, input: Key) {
+        match input {
+            Key::Enter => {
+                self.cur_line.push_str(&self.input_str);
+                self.new_line();
+                match self.input_str.as_str() {
+                    "help" => self.help(),
+                    "clear" => self.clear(),
+                    _ => self.puts(&format!("invalid command '{}'\n", self.input_str)),
+                }
+                self.input_str = String::new();
+            }
+            Key::Backspace => {
+                self.input_str.pop();
+            }
+            c if c.as_char().is_some() => {
+                let c = unsafe { c.as_char().unwrap_unchecked() };
+                self.input_str.push(c);
+            }
+            _ => {}
+        }
+        self.reapply_to_console();
+    }
 }
 
 static LOG: Mutex<Shell> = Mutex::new(Shell {
@@ -79,15 +115,23 @@ pub fn puts(s: &str) {
     LOG.lock().puts(s);
 }
 
+pub fn new_line() {
+    LOG.lock().new_line();
+}
+
 pub fn getc() -> char {
     todo!()
 }
 
 pub fn run() {
     LOG.lock().reapply_to_console();
-    let mut string = String::new();
     loop {
-        //super::kapi::arch::cpu::amd64::irq::wait();
-        if let Some(c) = kuti
+        irq::wait();
+        if let Some(c) = ps2::getk() {
+            match c {
+                KeyState::Pressed(c) => LOG.lock().pressed(c),
+                _ => {}
+            }
+        }
     }
 }

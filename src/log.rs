@@ -7,6 +7,7 @@ struct Writer;
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         drivers::serial_out::puts(s);
+        crate::shell::puts(s);
         Ok(())
     }
 }
@@ -22,16 +23,18 @@ pub fn log_fmt(args: fmt::Arguments) {
 }
 
 /// Normal logging
+#[macro_export]
 macro_rules! log {
     ($fmt:expr) => {
-        crate::log::log_fmt(format_args!($fmt))
+        ::klib::log::log_fmt(format_args!($fmt))
     };
     ($fmt:expr, $($args:expr)*) => {
-        crate::log::log_fmt(format_args!($fmt, $($args),*))
+        ::klib::log::log_fmt(format_args!($fmt, $($args),*))
     };
 }
 
 /// Info logging
+#[macro_export]
 macro_rules! loginf {
     ($fmt:expr) => {
         loginf!($fmt,)
@@ -44,6 +47,7 @@ macro_rules! loginf {
 }
 
 /// Log on success
+#[macro_export]
 macro_rules! logok {
     ($fmt:expr) => {
         logok!($fmt,)
@@ -56,6 +60,7 @@ macro_rules! logok {
 }
 
 /// Log on error
+#[macro_export]
 macro_rules! logerr {
     ($fmt:expr) => {
         logerr!($fmt,);

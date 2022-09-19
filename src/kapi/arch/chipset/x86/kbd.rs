@@ -11,16 +11,6 @@ impl Keyboard {
         self.read.take()
     }
 
-    fn getc(&mut self) -> Option<char> {
-        if let Some(b) = self.getb() {
-            match b {
-                _ => Some('A'),
-            }
-        } else {
-            None
-        }
-    }
-
     fn putb(&self, b: u8) {
         todo!()
     }
@@ -29,8 +19,13 @@ impl Keyboard {
         self.read = Some(b)
     }
 
+    fn empty_buf(&mut self) {
+        self.read = None;
+    }
+
     fn interrupt_handler(&mut self) {
         let read = in8(0x60);
+        self.add_to_queue(read);
     }
 }
 
@@ -44,12 +39,16 @@ pub fn getb() -> Option<u8> {
     KBD.lock().getb()
 }
 
-pub fn getc() -> Option<char> {
-    KBD.lock().getc()
-}
-
 pub fn putb(b: u8) {
     KBD.lock().putb(b)
+}
+
+pub fn buf_size() -> usize {
+    1
+}
+
+pub fn empty_buf() {
+    KBD.lock().empty_buf();
 }
 
 #[inline]
