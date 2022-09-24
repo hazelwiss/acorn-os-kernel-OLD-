@@ -5,6 +5,9 @@
 
 .global stage1
 stage1:
+    # Allocated 30 KiB of stack memory.  
+    mov sp, 0x7C00
+
     # Pushes the new CS to the stack and pops it!
     mov eax, offset .Lreset_cs
     push 0x00
@@ -18,9 +21,6 @@ stage1:
     mov ss, ax
     mov es, ax
     mov gs, ax
-
-    # Allocated 30 KiB of stack memory.  
-    mov sp, 0x7C00
 
     # Clears the current framebuffer.
     call clear_fb

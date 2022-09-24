@@ -53,6 +53,7 @@ pub const fn get_arch_interfaces() -> ArchInterfaces {
             dealloc: cpu::amd64::paging::dealloc,
             map: cpu::amd64::paging::map,
             unmap: cpu::amd64::paging::unmap,
+            reinstall: cpu::amd64::paging::reinstall,
         },
     }
 }

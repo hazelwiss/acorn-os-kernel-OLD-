@@ -8,7 +8,7 @@ use core::{
 };
 use spin::Once;
 
-const BLOCK_COUNT: usize = 512;
+const BLOCK_COUNT: usize = 4096 * 256;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
