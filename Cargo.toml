@@ -5,13 +5,32 @@ edition = "2021"
 
 [[bin]]
 name = "kernel"
-path = "src/main.rs"
+path = "src/kernel.rs"
 
 [lib]
-name = "klib"
-path = "src/lib.rs"
+name = "kernel_lib"
+path = "src/kernel_lib.rs"
 
 [dependencies]
 spin = "0.9.4"
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 
+hal = {path = "hal"}
+drivers = {path = "drivers"}
+platform = {path = "platform"}
+util = {path = "util"}
+
+[workspace]
+members = [
+    "hw",
+    "arch",
+    "arch/proc-macros",
+    "hal",
+    "hal/proc-macros",
+    "platform",
+    "platform/proc-macros",
+    "drivers",
+    "drivers/proc-macros",
+    "util",
+    "util/proc-macros"
+]

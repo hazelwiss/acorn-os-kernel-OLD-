@@ -1,0 +1,9 @@
+[package]
+name = "arch"
+description = "contains architecture specific code for CPU and chipset."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+util = {path = "../util"}
+proc_macros_arch = {path = "proc-macros"}

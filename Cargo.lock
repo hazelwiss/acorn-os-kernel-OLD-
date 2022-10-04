@@ -3,17 +3,53 @@
 version = 3
 
 [[package]]
+name = "arch"
+version = "0.1.0"
+dependencies = [
+ "proc_macros_arch",
+ "util",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
+name = "drivers"
+version = "0.1.0"
+dependencies = [
+ "platform",
+ "proc-macros-drivers",
+ "util",
+]
+
+[[package]]
+name = "hal"
+version = "0.1.0"
+dependencies = [
+ "proc-macros-hal",
+]
+
+[[package]]
+name = "hw"
+version = "0.1.0"
+dependencies = [
+ "arch",
+ "spin 0.9.4",
+]
+
+[[package]]
 name = "kernel"
 version = "0.1.0"
 dependencies = [
+ "drivers",
+ "hal",
  "lazy_static",
+ "platform",
  "spin 0.9.4",
+ "util",
 ]
 
 [[package]]
@@ -27,12 +63,86 @@ dependencies = [
 
 [[package]]
 name = "lock_api"
-version = "0.4.7"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "327fa5b6a6940e4699ec49a9beae1ea4845c6bab9314e4f84ac68742139d8c53"
+checksum = "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
 dependencies = [
  "autocfg",
  "scopeguard",
+]
+
+[[package]]
+name = "platform"
+version = "0.1.0"
+dependencies = [
+ "arch",
+ "hal",
+ "hw",
+ "proc-macros-platform",
+ "util",
+]
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.44"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7bd7356a8122b6c4a24a82b278680c73357984ca2fc79a0f9fa6dea7dced7c58"
+dependencies = [
+ "unicode-ident",
+]
+
+[[package]]
+name = "proc-macros-drivers"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "proc-macros-hal"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "proc-macros-platform"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "proc_macros_arch"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "proc_macros_util"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "quote"
+version = "1.0.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
+dependencies = [
+ "proc-macro2",
 ]
 
 [[package]]
@@ -54,4 +164,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f6002a767bff9e83f8eeecf883ecb8011875a21ae8da43bffb817a57e78cc09"
 dependencies = [
  "lock_api",
+]
+
+[[package]]
+name = "syn"
+version = "1.0.101"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e90cde112c4b9690b8cbe810cba9ddd8bc1d7472e2cae317b69e9438c1cba7d2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
+name = "unicode-ident"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+
+[[package]]
+name = "util"
+version = "0.1.0"
+dependencies = [
+ "proc_macros_util",
+ "spin 0.9.4",
 ]

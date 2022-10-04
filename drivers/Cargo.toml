@@ -1,0 +1,10 @@
+[package]
+name = "drivers"
+description = "contains driver code, and uses the HAL for platform agnostic implementation."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+platform = {path = "../platform"}
+util = {path = "../util"}
+proc-macros-drivers = {path="proc-macros"}

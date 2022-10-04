@@ -1,0 +1,9 @@
+[package]
+name = "hw"
+description = "contains hardware specific code which implements the HAL."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+arch = {path = "../arch"}
+spin = "0.9.4"

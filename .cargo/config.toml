@@ -2,7 +2,7 @@
 build-std = ["core", "alloc"]
 build-std-features= ["compiler-builtins-mem"]
 
-[target.amd64-kernel]
+[target.amd64-ibmpc]
 rustflags = [
 	"-C", "link-arg=-Ttargets/amd64/link.ld",
 	"-C", "linker=ld",

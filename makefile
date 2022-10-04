@@ -1,4 +1,4 @@
-DEBUG_OUT := target/amd64-kernel/debug/kernel
+DEBUG_OUT := target/amd64-ibmpc/debug/kernel
 SRC_ROOT = $(abspath .)
 
 .PHONY: all 
@@ -6,7 +6,7 @@ all: qemu
 
 .PHONY: build_debug
 build_debug:
-	@cargo build --target ${SRC_ROOT}/targets/amd64/amd64-kernel.json
+	@cargo build --target ${SRC_ROOT}/targets/amd64/amd64-ibmpc.json
 	@cp ${DEBUG_OUT} ${DEBUG_OUT}.not_stripped
 	@objcopy ${DEBUG_OUT} -O binary
 

@@ -1,8 +1,8 @@
-use crate::symbols;
 use core::{
     mem::size_of,
     sync::atomic::{AtomicUsize, Ordering},
 };
+use kernel::syms;
 
 static TOP: AtomicUsize = AtomicUsize::new(0);
 
@@ -11,7 +11,7 @@ static TOP: AtomicUsize = AtomicUsize::new(0);
 pub unsafe fn alloc_one<T>() -> &'static mut T {
     let mut adr: usize = 0;
     TOP.fetch_update(Ordering::Release, Ordering::Acquire, |top| {
-        let wma_bounds = symbols::wma_bounds();
+        let wma_bounds = syms::wma_bounds();
         adr = top + wma_bounds.start;
         let alloc_size = size_of::<T>();
         if adr + alloc_size > wma_bounds.end {
@@ -29,7 +29,7 @@ pub unsafe fn alloc_one<T>() -> &'static mut T {
 pub unsafe fn alloc_many<T>(count: usize) -> &'static mut [T] {
     let mut adr: usize = 0;
     TOP.fetch_update(Ordering::Release, Ordering::Acquire, |top| {
-        let wma_bounds = symbols::wma_bounds();
+        let wma_bounds = syms::wma_bounds();
         adr = top + wma_bounds.start;
         let alloc_size = size_of::<T>() * count;
         if adr + alloc_size > wma_bounds.end {

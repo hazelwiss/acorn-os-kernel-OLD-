@@ -1,0 +1,8 @@
+[package]
+name = "hal"
+description = "hardware abstraction layer required to make kernel and driver code target agnostic."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+proc-macros-hal = {path = "proc-macros"}

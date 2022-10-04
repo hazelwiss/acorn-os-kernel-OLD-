@@ -1,0 +1,12 @@
+[package]
+name = "platform"
+description = "interfaces architecture and hardware specific code with the HAL."
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hal = {path = "../hal"}
+arch = {path = "../arch"}
+hw = {path = "../hw"}
+proc-macros-platform = {path = "proc-macros"}
+util = {path = "../util"}
